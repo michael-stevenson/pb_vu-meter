@@ -10,7 +10,6 @@ from ctypes import POINTER, c_ubyte, c_void_p, c_ulong, cast
 # From https://github.com/Valodim/python-pulseaudio
 from pulseaudio.lib_pulseaudio import *
 
-SINK_NAME = 'alsa_output.pci-0000_00_1f.3.analog-stereo'  # edit to match your sink
 METER_RATE = 344
 MAX_SAMPLE_VALUE = 127
 DISPLAY_SCALE = 5
@@ -96,6 +95,7 @@ parser.add_argument("-l", "--left", action="store_true",
         help="Display left meter")
 parser.add_argument("-r", "--right", action="store_true",
         help="Display right meter")
+parser.add_argument("--sink", help = "The sink to monitor")
 
 def main():
         args = parser.parse_args()
@@ -126,7 +126,7 @@ def main():
              '%{{F#800}}{}%{{F-}}'.format(BAR_CHAR)
             ]
 
-        monitor = PeakMonitor(SINK_NAME, METER_RATE)
+        monitor = PeakMonitor(args.sink, METER_RATE)
         for sample in monitor:
              sample = sample / DISPLAY_SCALE
              bar_pad = '%{{F#060}}{}%{{F-i}}'.format(BAR_PAD_CHAR)
